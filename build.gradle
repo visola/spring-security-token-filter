@@ -9,6 +9,10 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'ca.cutterslade.analyze'
+apply plugin: 'maven'
+
+group = 'org.visola.spring.security'
+version = '1.0'
 
 repositories {
   mavenCentral()
