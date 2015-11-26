@@ -1,0 +1,21 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.0.3'
+  }
+}
+
+apply plugin: 'java'
+apply plugin: 'ca.cutterslade.analyze'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'jetty:servlet-api:2.5-6.0.2'
+  compile 'org.springframework.security:spring-security-core:4.0.3.RELEASE'
+  compile 'org.springframework:spring-web:4.2.3.RELEASE'
+}
