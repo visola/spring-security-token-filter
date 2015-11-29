@@ -1,5 +1,10 @@
+bin/
 build/
 .classpath
 .gradle/
+.idea/
+*.iml
+*.log
 .settings/
 .project
+
