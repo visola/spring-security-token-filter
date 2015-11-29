@@ -1,1 +1,3 @@
 rootProject.name = 'spring-security-token-filter'
+
+include 'samples:SimpleTokenAuthentication'
