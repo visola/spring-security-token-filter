@@ -1,14 +1,5 @@
-buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.0.3'
-  }
-}
-
 apply plugin: 'java'
-apply plugin: 'ca.cutterslade.analyze'
+apply plugin: 'eclipse'
 apply plugin: 'maven'
 
 group = 'org.visola.spring.security'
@@ -20,7 +11,12 @@ repositories {
 }
 
 dependencies {
-  compile 'jetty:servlet-api:2.5-6.0.2'
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
+  compile 'com.nimbusds:nimbus-jose-jwt:4.8'
+  compile 'javax.inject:javax.inject:1'
+  compile 'javax.servlet:javax.servlet-api:3.1.0'
   compile 'org.springframework.security:spring-security-core:4.0.3.RELEASE'
+  compile 'org.springframework:spring-beans:4.2.3.RELEASE'
   compile 'org.springframework:spring-web:4.2.3.RELEASE'
+  compile 'org.visola.spring.security:spring-security-token-filter:1.0'
 }

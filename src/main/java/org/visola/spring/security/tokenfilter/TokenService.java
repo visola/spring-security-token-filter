@@ -6,6 +6,6 @@ import org.springframework.security.core.Authentication;
 
 public interface TokenService {
 
-  Optional<Authentication> validateToken(Optional<String> token);
+  Optional<Authentication> verifyToken(Optional<String> token);
 
 }

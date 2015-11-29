@@ -1,8 +1,9 @@
-package org.visola.spring.security.tokenfilter;
+package org.visola.spring.security.tokenfilter.jwt;
 
 import java.io.IOException;
 import java.util.Optional;
 
+import javax.inject.Inject;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -12,12 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
+import org.visola.spring.security.tokenfilter.TokenService;
 
-public class TokenAuthenticationFilter extends GenericFilterBean {
+public class JwtAuthenticationFilter extends GenericFilterBean {
 
+  private static final String BEARER = "Bearer ";
   private final TokenService tokenService;
 
-  public TokenAuthenticationFilter(TokenService tokenService) {
+  @Inject
+  public JwtAuthenticationFilter(TokenService tokenService) {
     this.tokenService = tokenService;
   }
 
@@ -25,7 +29,11 @@ public class TokenAuthenticationFilter extends GenericFilterBean {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
     HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-    Optional<Authentication> authentication = tokenService.verifyToken(Optional.ofNullable(httpRequest.getHeader("X-Auth-Token")));
+    Optional<String> token = Optional.ofNullable(httpRequest.getHeader("Authorization"))
+        .filter(s -> s.length() > BEARER.length() && s.startsWith(BEARER))
+        .map(s -> s.substring(BEARER.length(), s.length()));
+
+    Optional<Authentication> authentication = tokenService.verifyToken(token);
     if (authentication.isPresent()) {
       SecurityContextHolder.getContext().setAuthentication(authentication.get());
     }
