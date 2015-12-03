@@ -1,5 +1,6 @@
 package org.visola.spring.security.tokenfilter.jwt;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +16,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 
+import net.minidev.json.JSONObject;
+
 public class UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer implements AuthenticationJwtClaimsSetTransformer {
 
   private static final String EMPTY_PASSWORD = "";
@@ -28,8 +31,27 @@ public class UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer implemen
 
   @Override
   public JWTClaimsSet getClaimsSet(Authentication auth) {
-    // TODO Auto-generated method stub
-    return null;
+    JSONObject object = new JSONObject();
+    object.put("subject", auth.getPrincipal());
+
+    StringBuilder roles = new StringBuilder();
+    for (GrantedAuthority authority : auth.getAuthorities()) {
+      String role = authority.getAuthority();
+      if (rolePrefix.isPresent()) {
+        role = role.substring(rolePrefix.get().length(), role.length());
+      }
+      roles.append(role.toLowerCase());
+      roles.append(",");
+    }
+    roles.setLength(roles.length() - 1);
+
+    object.put("roles", roles.toString());
+
+    try {
+      return JWTClaimsSet.parse(object);
+    } catch (ParseException e) {
+      throw new RuntimeException("Error while parsing JSON for claims set.", e);
+    }
   }
 
   @Override
