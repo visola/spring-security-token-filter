@@ -1,5 +1,7 @@
 package org.visola.spring.security.tokenfilter.jwt.samples;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +11,10 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.visola.spring.security.tokenfilter.TokenService;
+import org.visola.spring.security.tokenfilter.jwt.AuthenticationJwtClaimsSetTransformer;
 import org.visola.spring.security.tokenfilter.jwt.JwtAuthenticationFilter;
 import org.visola.spring.security.tokenfilter.jwt.JwtTokenService;
+import org.visola.spring.security.tokenfilter.jwt.UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer;
 
 import com.nimbusds.jose.JOSEException;
 
@@ -43,7 +47,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Bean
   public TokenService tokenService() throws JOSEException {
-    return new JwtTokenService("ROLE_", secret);
+    return new JwtTokenService(claimsSetTransformer(), secret);
+  }
+
+  @Bean
+  public AuthenticationJwtClaimsSetTransformer claimsSetTransformer() {
+    return new UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer(Optional.of("ROLE_"));
   }
 
 }
