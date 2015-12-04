@@ -12,7 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 
@@ -32,7 +32,7 @@ public class UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer implemen
 
   @Override
   public JWTClaimsSet getClaimsSet(Authentication auth) {
-    User user = (User) auth.getPrincipal();
+    UserDetails user = (UserDetails) auth.getPrincipal();
     long now = System.currentTimeMillis();
 
     List<String> roles = auth.getAuthorities().stream()
