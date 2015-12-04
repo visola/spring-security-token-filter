@@ -56,13 +56,18 @@ public class JwtTokenService implements TokenService {
     JWTClaimsSet claimSet;
     try {
       signedJwt = SignedJWT.parse(token.get());
+      claimSet = signedJwt.getJWTClaimsSet();
+
       if (!signedJwt.verify(verifier)) {
         throw new BadCredentialsException("Invalid token");
       }
-
-      claimSet = signedJwt.getJWTClaimsSet();
     } catch (ParseException | JOSEException e) {
       throw new IllegalArgumentException("Error while parsing and verifying token.", e);
+    }
+
+
+    if (claimSet.getExpirationTime().getTime() < System.currentTimeMillis()) {
+      throw new BadCredentialsException("Token is expired");
     }
 
     return Optional.of(transformer.getAuthentication(claimSet));
