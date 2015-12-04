@@ -1,6 +1,7 @@
 package org.visola.spring.security.tokenfilter.jwt.samples;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +53,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Bean
   public AuthenticationJwtClaimsSetTransformer claimsSetTransformer() {
-    return new UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer(Optional.of("ROLE_"));
+    return new UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer(TimeUnit.HOURS.toMillis(8), Optional.of("ROLE_"));
   }
 
 }
