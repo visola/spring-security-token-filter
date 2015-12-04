@@ -1,8 +1,8 @@
 package org.visola.spring.security.tokenfilter.jwt;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,26 +13,27 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
 import com.nimbusds.jwt.JWTClaimsSet;
-
-import net.minidev.json.JSONObject;
 
 public class UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer implements AuthenticationJwtClaimsSetTransformer {
 
   private static final String EMPTY_PASSWORD = "";
 
+  private final long tokenDuration;
   private final Optional<String> rolePrefix;
 
   @Inject
-  public UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer(Optional<String> rolePrefix) {
+  public UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer(long tokenDuration, Optional<String> rolePrefix) {
     this.rolePrefix = rolePrefix;
+    this.tokenDuration = tokenDuration;
   }
 
   @Override
   public JWTClaimsSet getClaimsSet(Authentication auth) {
-    JSONObject object = new JSONObject();
-    object.put("subject", auth.getPrincipal());
+    User user = (User) auth.getPrincipal();
+    long now = System.currentTimeMillis();
 
     StringBuilder roles = new StringBuilder();
     for (GrantedAuthority authority : auth.getAuthorities()) {
@@ -45,13 +46,12 @@ public class UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer implemen
     }
     roles.setLength(roles.length() - 1);
 
-    object.put("roles", roles.toString());
-
-    try {
-      return JWTClaimsSet.parse(object);
-    } catch (ParseException e) {
-      throw new RuntimeException("Error while parsing JSON for claims set.", e);
-    }
+    return new JWTClaimsSet.Builder()
+        .subject(user.getUsername())
+        .issueTime(new Date(now))
+        .expirationTime(new Date(now + tokenDuration))
+        .claim("roles", roles.toString())
+        .build();
   }
 
   @Override
