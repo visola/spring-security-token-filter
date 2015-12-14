@@ -15,13 +15,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 import org.visola.spring.security.tokenfilter.TokenService;
 
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class TokenAuthenticationFilter extends GenericFilterBean {
 
   private static final String BEARER = "Bearer ";
   private final TokenService tokenService;
 
   @Inject
-  public JwtAuthenticationFilter(TokenService tokenService) {
+  public TokenAuthenticationFilter(TokenService tokenService) {
     this.tokenService = tokenService;
   }
 
