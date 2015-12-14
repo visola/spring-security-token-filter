@@ -9,9 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.visola.spring.security.tokenfilter.TokenAuthenticationFilter;
 import org.visola.spring.security.tokenfilter.TokenService;
 import org.visola.spring.security.tokenfilter.jwt.AuthenticationJwtClaimsSetTransformer;
-import org.visola.spring.security.tokenfilter.jwt.JwtAuthenticationFilter;
 import org.visola.spring.security.tokenfilter.jwt.JwtTokenService;
 import org.visola.spring.security.tokenfilter.jwt.UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer;
 
@@ -39,7 +39,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     .antMatchers("/login.html").anonymous();
 
     // Add the JWT Filter
-    http.addFilterBefore(new JwtAuthenticationFilter(tokenService()), BasicAuthenticationFilter.class);
+    http.addFilterBefore(new TokenAuthenticationFilter(tokenService()), BasicAuthenticationFilter.class);
   }
 
   @Bean
