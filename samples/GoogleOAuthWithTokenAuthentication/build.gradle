@@ -18,6 +18,8 @@ repositories {
 
 dependencies {
   compile project(':')
+  compile 'org.apache.httpcomponents:httpclient:4.3.6'
   compile 'org.springframework.boot:spring-boot-starter-security'
+  compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
   compile 'org.springframework.boot:spring-boot-starter-web'
 }
