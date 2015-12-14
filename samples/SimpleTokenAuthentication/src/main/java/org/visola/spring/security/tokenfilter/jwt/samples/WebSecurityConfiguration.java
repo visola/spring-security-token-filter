@@ -13,7 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.visola.spring.security.tokenfilter.TokenService;
 import org.visola.spring.security.tokenfilter.jwt.AuthenticationJwtClaimsSetTransformer;
-import org.visola.spring.security.tokenfilter.jwt.TokenAuthenticationFilter;
+import org.visola.spring.security.tokenfilter.TokenAuthenticationFilter;
 import org.visola.spring.security.tokenfilter.jwt.JwtTokenService;
 import org.visola.spring.security.tokenfilter.jwt.UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer;
 
