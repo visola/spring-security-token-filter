@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 group = 'org.visola.spring.security'
 version = '1.0'
@@ -9,6 +10,10 @@ version = '1.0'
 repositories {
   mavenCentral()
   mavenLocal()
+}
+
+signing {
+    sign configurations.archives
 }
 
 dependencies {
@@ -24,4 +29,62 @@ dependencies {
   testCompile 'junit:junit:4.11'
   testCompile 'org.assertj:assertj-core:2.2.0'
   testCompile 'org.mockito:mockito-core:1.10.19'
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'spring-security-token-filter'
+        packaging 'jar'
+        description 'Token authentication for Spring Security applications.'
+        url 'https://github.com/visola/spring-security-token-filter'
+
+        scm {
+          connection 'https://github.com/visola/spring-security-token-filter.git'
+          developerConnection 'https://github.com/visola/spring-security-token-filter.git'
+          url 'https://github.com/visola/spring-security-token-filter.git'
+        }
+
+        licenses {
+          license {
+            name 'The MIT License (MIT)'
+            url 'https://opensource.org/licenses/MIT'
+          }
+        }
+
+        developers {
+          developer {
+            id 'visola'
+            name 'Vinicius Isola'
+            email 'viniciusisola@gmail.com'
+          }
+        }
+      }
+    }
+  }
+}
+
+task javadocJar(type: Jar) {
+  classifier = 'javadoc'
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+artifacts {
+  archives javadocJar, sourcesJar
 }
