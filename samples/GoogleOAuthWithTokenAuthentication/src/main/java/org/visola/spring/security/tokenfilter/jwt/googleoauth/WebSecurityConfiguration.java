@@ -36,7 +36,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     .authorizeRequests()
 
     // Authenticate endpoint can be access by anyone
-    .antMatchers("/login.html").anonymous();
+    .antMatchers("/login.html").anonymous()
+
+    // Secure the endpoints
+    .antMatchers("/api/v1/*").hasAnyRole("USER");
 
     // Add the JWT Filter
     http.addFilterBefore(new TokenAuthenticationFilter(tokenService()), BasicAuthenticationFilter.class);
