@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -40,6 +42,7 @@ public class GoogleOAuthController {
   private static final String GOOGLE_TOKEN_ENDPOINT = "https://www.googleapis.com/oauth2/v3/token";
   private static final String GOOGLE_EMAIL_ENDPOINT = "https://www.googleapis.com/plus/v1/people/me";
   private static final String SCOPES = "email";
+  private static final GrantedAuthority[] ROLES = new GrantedAuthority[]{new SimpleGrantedAuthority("ROLE_USER")};
 
   private final String clientId;
   private final String clientSecret;
@@ -108,7 +111,7 @@ public class GoogleOAuthController {
       emails.add(email);
     }
 
-    LoginResponse authResponse = new LoginResponse(tokenService.generateToken(new UsernamePasswordAuthenticationToken(new User(email, "", new ArrayList<>()), "")));
+    LoginResponse authResponse = new LoginResponse(tokenService.generateToken(new UsernamePasswordAuthenticationToken(new User(email, "", Arrays.asList(ROLES)), "")));
 
     mv.addObject("email", email);
     mv.addObject("token", authResponse.getToken());
