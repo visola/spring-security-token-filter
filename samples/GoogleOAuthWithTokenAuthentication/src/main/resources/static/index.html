@@ -1,0 +1,63 @@
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/jquery/3.0.0-alpha1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/jsrsasign/5.0.5/jsrsasign.js"></script>
+  <script>
+    function fetchMessage() {
+      var name = $('[name=name]').val(),
+        url = '/api/v1/secure/' + (name ? '?name='+name : '');
+
+      $.get(url, function (response) {
+        $('#message').text(response.message);
+      });
+    }
+
+    function logout() {
+      delete localStorage.token;
+      delete localStorage.email;
+      redirectLogin();
+    }
+
+    function redirectLogin() {
+      window.location = '/login.html';
+    }
+
+    $(function () { // Wait for DOM to load
+      var auth = null;
+
+      $('#fetch').click(fetchMessage);
+      $('#logout').click(logout);
+
+      if (localStorage.token) { // If user has a valid login
+        // Use jsrasign JWS library (http://kjur.github.io/jsrsasign/) to get the claims set from the token
+        auth = KJUR.jws.JWS.parse(localStorage.token).payloadObj;
+        $('#user-email').text(auth.sub);
+
+        // Setup jQuery to add the token on all ajax requests
+        $.ajaxSetup({
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Bearer " + localStorage.token);
+          }
+        });
+      } else {
+        // No valid token, redirect back to login page
+        redirectLogin();
+      }
+    });
+  </script>
+</head>
+<body>
+  <p>
+    Logged in user: <span id="user-email"></span>
+    <button id="logout">Logout</button>
+  </p>
+
+  <p>
+    Type a name if you want:
+    <input type="text" name="name" />
+  </p>
+  <button id="fetch">Click to fetch message</button>
+
+  <p id="message"></p>
+</body>
+</html>

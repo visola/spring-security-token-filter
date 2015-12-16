@@ -1,0 +1,12 @@
+oauth:
+  google:
+    clientId: YOUR_APP_ID_HERE
+    clientSecret: YOUR_APP_SECRET_HERE
+    redirectUri: http://localhost:8080/authenticate/oauth2callback
+    scopes: email
+
+secret: YourSecretNeedsToBeAtLeast256BitsLong
+
+spring:
+  thymeleaf:
+    cache: false

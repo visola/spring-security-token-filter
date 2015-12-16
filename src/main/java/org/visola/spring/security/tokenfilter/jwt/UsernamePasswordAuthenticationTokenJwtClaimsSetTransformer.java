@@ -35,7 +35,7 @@ public class UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer implemen
     UserDetails user = (UserDetails) auth.getPrincipal();
     long now = System.currentTimeMillis();
 
-    List<String> roles = auth.getAuthorities().stream()
+    List<String> roles = user.getAuthorities().stream()
       .map(a -> {
         String role = a.getAuthority();
         if (rolePrefix.isPresent()) {
