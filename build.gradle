@@ -1,93 +1,105 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'jacoco'
-apply plugin: 'maven'
-apply plugin: 'signing'
-
-group = 'org.visola.spring.security'
-version = '1.0'
-
+def samplesProjectName = 'samples'
 def ossrhUser = hasProperty('ossrhUsername') ? ossrhUsername : ''
 def ossrhPass = hasProperty('ossrhPassword') ? ossrhPassword : ''
 
-repositories {
-  mavenCentral()
-  mavenLocal()
-}
-
-signing {
-    sign configurations.archives
-}
-
-dependencies {
-  compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
-  compile 'com.nimbusds:nimbus-jose-jwt:4.8'
-  compile 'javax.inject:javax.inject:1'
-  compile 'javax.servlet:javax.servlet-api:3.1.0'
-  compile 'org.springframework.security:spring-security-core:4.0.3.RELEASE'
-  compile 'org.springframework:spring-beans:4.2.3.RELEASE'
-  compile 'org.springframework:spring-web:4.2.3.RELEASE'
-  compile 'org.visola.spring.security:spring-security-token-filter:1.0'
-
-  testCompile 'junit:junit:4.11'
-  testCompile 'org.assertj:assertj-core:2.2.0'
-  testCompile 'org.mockito:mockito-core:1.10.19'
-}
-
-uploadArchives {
+buildscript {
   repositories {
-    mavenDeployer {
-      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE'
+    classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.2.5.RELEASE'
+  }
+}
 
-      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(userName: ossrhUser, password: ossrhPass)
-      }
+subprojects {
+  if (it.parent != null && it.name != samplesProjectName) {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
 
-      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-        authentication(userName: ossrhUser, password: ossrhPass)
-      }
+    repositories {
+      mavenCentral()
+      mavenLocal()
+    }
 
-      pom.project {
-        name 'spring-security-token-filter'
-        packaging 'jar'
-        description 'Token authentication for Spring Security applications.'
-        url 'https://github.com/visola/spring-security-token-filter'
+    if (it.parent.name == samplesProjectName) {
+      apply plugin: 'spring-boot'
 
-        scm {
-          connection 'https://github.com/visola/spring-security-token-filter.git'
-          developerConnection 'https://github.com/visola/spring-security-token-filter.git'
-          url 'https://github.com/visola/spring-security-token-filter.git'
+    } else {
+      apply plugin: 'jacoco'
+      apply plugin: 'maven'
+      apply plugin: 'signing'
+      apply plugin: 'io.spring.dependency-management'
+
+      afterEvaluate { Project project ->
+        signing {
+          sign configurations.archives
         }
 
-        licenses {
-          license {
-            name 'The MIT License (MIT)'
-            url 'https://opensource.org/licenses/MIT'
+        task javadocJar(type: Jar) {
+          classifier = 'javadoc'
+          from javadoc
+        }
+
+        task sourcesJar(type: Jar) {
+          classifier = 'sources'
+          from sourceSets.main.allSource
+        }
+
+        artifacts {
+          archives javadocJar, sourcesJar
+        }
+
+        dependencyManagement {
+          imports {
+            mavenBom 'io.spring.platform:platform-bom:2.0.1.RELEASE'
           }
         }
 
-        developers {
-          developer {
-            id 'visola'
-            name 'Vinicius Isola'
-            email 'viniciusisola@gmail.com'
+        uploadArchives {
+          repositories {
+            mavenDeployer {
+              beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+              repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUser, password: ossrhPass)
+              }
+
+              snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUser, password: ossrhPass)
+              }
+
+              pom.project {
+                name project.name
+                packaging 'jar'
+                description project.description
+                url 'https://github.com/visola/spring-security-token-filter'
+
+                scm {
+                  connection 'https://github.com/visola/spring-security-token-filter.git'
+                  developerConnection 'https://github.com/visola/spring-security-token-filter.git'
+                  url 'https://github.com/visola/spring-security-token-filter.git'
+                }
+
+                licenses {
+                  license {
+                    name 'The MIT License (MIT)'
+                    url 'https://opensource.org/licenses/MIT'
+                  }
+                }
+
+                developers {
+                  developer {
+                    id 'visola'
+                    name 'Vinicius Isola'
+                    email 'viniciusisola@gmail.com'
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   }
-}
-
-task javadocJar(type: Jar) {
-  classifier = 'javadoc'
-  from javadoc
-}
-
-task sourcesJar(type: Jar) {
-  classifier = 'sources'
-  from sourceSets.main.allSource
-}
-
-artifacts {
-  archives javadocJar, sourcesJar
 }

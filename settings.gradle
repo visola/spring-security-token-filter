@@ -1,3 +1,1 @@
-rootProject.name = 'spring-security-token-filter'
-
-include 'samples:SimpleTokenAuthentication', 'samples:GoogleOAuthWithTokenAuthentication'
+include 'spring-security-token-filter', 'samples:SimpleTokenAuthentication', 'samples:GoogleOAuthWithTokenAuthentication'
