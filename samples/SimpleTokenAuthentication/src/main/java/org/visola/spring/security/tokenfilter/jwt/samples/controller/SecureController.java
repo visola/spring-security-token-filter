@@ -11,7 +11,7 @@ import org.visola.spring.security.tokenfilter.jwt.samples.model.Message;
 public class SecureController {
 
   @RequestMapping(method=RequestMethod.GET)
-  public Message getMessage(@RequestParam(name="name", defaultValue="John") String name) {
+  public Message getMessage(@RequestParam(value="name", defaultValue="John") String name) {
     return new Message("Hello " + name + "!");
   }
 

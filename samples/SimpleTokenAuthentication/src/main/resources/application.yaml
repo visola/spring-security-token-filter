@@ -1,1 +1,1 @@
-secret: YourSecretNeedsToBeAtLeast256BitsLong
+security.token.filter.secret: YourSecretNeedsToBeAtLeast256BitsLong

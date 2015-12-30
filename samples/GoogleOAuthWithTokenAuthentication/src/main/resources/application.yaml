@@ -5,7 +5,7 @@ oauth:
     redirectUri: http://localhost:8080/authenticate/oauth2callback
     scopes: email
 
-secret: YourSecretNeedsToBeAtLeast256BitsLong
+security.token.filter.secret: YourSecretNeedsToBeAtLeast256BitsLong
 
 spring:
   thymeleaf:
