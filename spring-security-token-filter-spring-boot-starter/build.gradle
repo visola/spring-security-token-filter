@@ -1,0 +1,10 @@
+description = 'Spring boot starter for token authentication for Spring Security applications.'
+group = 'org.visola.spring.security'
+version = '1.0'
+
+dependencies {
+  compile project(':spring-security-token-filter')
+  compile 'org.springframework.boot:spring-boot-autoconfigure'
+  compile 'org.springframework.security:spring-security-config'
+  compile 'org.springframework.security:spring-security-web'
+}

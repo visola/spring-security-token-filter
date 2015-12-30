@@ -1,1 +1,1 @@
-include 'spring-security-token-filter', 'samples:SimpleTokenAuthentication', 'samples:GoogleOAuthWithTokenAuthentication'
+include 'spring-security-token-filter', 'spring-security-token-filter-spring-boot-starter', 'samples:SimpleTokenAuthentication', 'samples:GoogleOAuthWithTokenAuthentication'
