@@ -1,3 +1,6 @@
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
 def samplesProjectName = 'samples'
 def ossrhUser = hasProperty('ossrhUsername') ? ossrhUsername : ''
 def ossrhPass = hasProperty('ossrhPassword') ? ossrhPassword : ''
@@ -15,6 +18,7 @@ subprojects {
   if (it.parent != null && it.name != samplesProjectName) {
     apply plugin: 'java'
     apply plugin: 'eclipse'
+    apply plugin: 'idea'
 
     repositories {
       mavenCentral()
