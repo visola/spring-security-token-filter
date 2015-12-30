@@ -33,6 +33,12 @@ public class JWTFilterConfiguration extends WebSecurityConfigurerAdapter {
   @Value("${security.token.filter.role-prefix:ROLE_}")
   String rolePrefix;
 
+  @Value("${security.token.filter.token-duration-in-minutes:0}")
+  int tokenDurationInMinutes;
+
+  @Value("${security.token.filter.token-duration-in-hours:8}")
+  int tokenDurationInHours;
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable()
@@ -56,7 +62,17 @@ public class JWTFilterConfiguration extends WebSecurityConfigurerAdapter {
       prefix = Optional.of(rolePrefix);
     }
 
-    return new UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer(TimeUnit.HOURS.toMillis(8), prefix);
+    long tokenDuration = 0;
+
+    if (tokenDurationInHours != 0) {
+      tokenDuration = TimeUnit.HOURS.toMillis(tokenDurationInHours);
+    }
+
+    if (tokenDurationInMinutes != 0) {
+      tokenDuration = TimeUnit.MINUTES.toMillis(tokenDurationInMinutes);
+    }
+
+    return new UsernamePasswordAuthenticationTokenJwtClaimsSetTransformer(tokenDuration, prefix);
   }
 
 }
