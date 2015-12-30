@@ -3,9 +3,6 @@ package org.visola.spring.security.tokenfilter.jwt;
 import java.text.ParseException;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.visola.spring.security.tokenfilter.TokenService;
@@ -26,9 +23,8 @@ public class JwtTokenService implements TokenService {
   private final JWSSigner signer;
   private final JWSVerifier verifier;
 
-  @Inject
   public JwtTokenService (AuthenticationJwtClaimsSetTransformer transformer,
-                          @Value("${secret}") String secret) throws JOSEException {
+                          String secret) throws JOSEException {
     this.signer = new MACSigner(secret);
     this.verifier = new MACVerifier(secret);
     this.transformer = transformer;

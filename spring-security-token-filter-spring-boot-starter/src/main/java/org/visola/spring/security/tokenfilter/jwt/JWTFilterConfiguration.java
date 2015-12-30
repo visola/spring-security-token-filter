@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 @Order(37)
 public class JWTFilterConfiguration extends WebSecurityConfigurerAdapter {
 
-  @Value("${secret}")
+  @Value("${security.token.filter.secret}")
   String secret;
 
   @Override
