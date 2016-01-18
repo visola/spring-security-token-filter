@@ -35,6 +35,10 @@ subprojects {
       apply plugin: 'io.spring.dependency-management'
 
       afterEvaluate { Project project ->
+        jacoco {
+          toolVersion = "0.7.5.201505241946"
+        }
+
         signing {
           sign configurations.archives
         }

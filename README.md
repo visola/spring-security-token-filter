@@ -4,45 +4,52 @@ Token authentication for Spring Security applications.
 
 # Usage
 
-Add the Spring Boot starter project to your classpath and you're done:
+Add the Spring Boot starter project to your classpath:
 
-```
+```groovy
 repositories {
   mavenCentral()
 }
 
 dependencies {
-  compile 'org.visola.spring.security:spring-security-token-filter-boot-starter:1.0'
-}
-``` 
-
-## Not using Spring Boot?
-
-To use the token filter you just need to add it to your Spring Security filter chain like the following:
-
-
-
-```java
-@Configuration
-@EnableWebMvcSecurity
-public class MyWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-  //...
-
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    // Setup Spring Security authorization here
-
-    // Add the Token Filter
-    http.addFilterBefore(new TokenAuthenticationFilter(tokenService()), BasicAuthenticationFilter.class);
-  }
-
-  //...
-
+  compile 'org.visola.spring.security:spring-security-token-filter-boot-starter:1.1'
 }
 ```
 
-You only need to provide a `TokenService` implementation, or use the JWT one, as shown below.
+Add `TokenAuthenticationFilter` filter to your filter chain, like the following:
+
+```java
+// Imports omitted
+
+@Configuration
+@EnableWebSecurity
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+  /**
+    * The starter bundle will provide a TokenAuthenticationFilter for you.
+    */
+  @Autowired
+  private TokenAuthenticationFilter tokenAuthenticationFilter;
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    // This will make your app completely stateless
+    http.csrf().disable()
+      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+    // Add the TokenAuthenticationFilter to your filter chain
+    http.addFilterBefore(tokenAuthenticationFilter, BasicAuthenticationFilter.class);
+
+    // More HttpSecurity configuration here
+  }
+
+}
+
+```
+
+## Not using Spring Boot?
+
+Add the starter project as a dependency, then you just need to load the `JWTFilterConfiguration` configuration.
 
 # JWT
 

@@ -30,6 +30,14 @@ public class JwtTokenService implements TokenService {
     this.transformer = transformer;
   }
 
+  public JwtTokenService (AuthenticationJwtClaimsSetTransformer transformer,
+                          JWSSigner signer,
+                          JWSVerifier verifier) throws JOSEException {
+    this.signer = signer;
+    this.verifier = verifier;
+    this.transformer = transformer;
+  }
+
   @Override
   public String generateToken(Authentication authentication) {
     JWTClaimsSet claimsSet = transformer.getClaimsSet(authentication);
