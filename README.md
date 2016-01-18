@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-  compile 'org.visola.spring.security:spring-security-token-filter-boot-starter:1.0'
+  compile 'org.visola.spring.security:spring-security-token-filter-boot-starter:1.1'
 }
 ```
 
