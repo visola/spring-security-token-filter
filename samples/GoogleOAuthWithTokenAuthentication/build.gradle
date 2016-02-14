@@ -1,5 +1,5 @@
 dependencies {
-  compile project(':spring-boot-starter-security-token-filter')
+  compile project(':spring-security-token-filter-spring-boot-starter')
   compile 'org.apache.httpcomponents:httpclient:4.3.6'
   compile 'org.springframework.boot:spring-boot-starter-security'
   compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
