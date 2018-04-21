@@ -1,5 +1,3 @@
-**IMPORTANT!! This project is OBSELETE and DEPRECATED. Please use [Spring Security JOSE Framework](https://docs.spring.io/spring-security/site/docs/5.0.5.BUILD-SNAPSHOT/reference/htmlsingle/#jc-oauth2login).**
-
 # spring-security-token-filter [![Build Status](https://travis-ci.org/visola/spring-security-token-filter.svg)](https://travis-ci.org/visola/spring-security-token-filter/builds)
 
 Token authentication for Spring Security applications.
