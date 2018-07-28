@@ -6,7 +6,7 @@ buildscript {
 }
 
 plugins {
-  id 'org.springframework.boot' version '2.0.1.RELEASE'
+  id 'org.springframework.boot' version '2.0.3.RELEASE'
 }
 
 def samplesContainerProjectName = 'samples'
