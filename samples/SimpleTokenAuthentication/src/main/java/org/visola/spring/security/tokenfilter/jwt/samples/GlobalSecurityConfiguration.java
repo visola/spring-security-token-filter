@@ -10,7 +10,10 @@ public class GlobalSecurityConfiguration extends GlobalAuthenticationConfigurerA
 
   @Autowired
   protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    auth.inMemoryAuthentication().withUser("john").password("pass").roles("USER");
+    auth.inMemoryAuthentication()
+        .withUser("john")
+        .password("{noop}pass")
+        .roles("USER");
   }
 
 }
