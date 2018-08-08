@@ -11,10 +11,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +25,6 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
@@ -64,9 +63,6 @@ public class JwtTokenServiceTest {
         .expirationTime(EXPIRATION)
         .build();
 
-    Mockito.when(mockTransformer.getClaimsSet(AUTHENTICATION)).thenReturn(claimsSet);
-    Mockito.when(mockSigner.sign(Matchers.any(), Matchers.any())).thenReturn(Base64URL.encode("MYSIGNATURE"));
-
     // Method being tested
     String token = jwtTokenService.generateToken(AUTHENTICATION);
 
@@ -93,7 +89,7 @@ public class JwtTokenServiceTest {
         .build();
 
     Mockito.when(mockTransformer.getClaimsSet(AUTHENTICATION)).thenReturn(claimsSet);
-    Mockito.when(mockSigner.sign(Matchers.any(), Matchers.any())).thenThrow(new JOSEException("Signing fail"));
+    Mockito.when(mockSigner.sign(ArgumentMatchers.any(), ArgumentMatchers.any())).thenThrow(new JOSEException("Signing fail"));
 
     // Method being tested
     jwtTokenService.generateToken(AUTHENTICATION);

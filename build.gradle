@@ -1,44 +1,50 @@
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-
-def samplesProjectName = 'samples'
-def ossrhUser = hasProperty('ossrhUsername') ? ossrhUsername : ''
-def ossrhPass = hasProperty('ossrhPassword') ? ossrhPassword : ''
-
 buildscript {
   repositories {
     mavenCentral()
-  }
-  dependencies {
-    classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.1.RELEASE'
+    mavenLocal()
   }
 }
 
+plugins {
+  id 'org.springframework.boot' version '2.0.3.RELEASE'
+}
+
+def samplesContainerProjectName = 'samples'
+def ossrhUser = hasProperty('ossrhUsername') ? ossrhUsername : ''
+def ossrhPass = hasProperty('ossrhPassword') ? ossrhPassword : ''
+
 subprojects {
-  if (it.parent != null && it.name != samplesProjectName) {
-    apply plugin: 'java'
+  if (it.parent != null && it.name != samplesContainerProjectName) {
     apply plugin: 'eclipse'
     apply plugin: 'idea'
+    apply plugin: 'io.spring.dependency-management'
 
     repositories {
       mavenCentral()
-      mavenLocal()
     }
 
-    if (it.parent.name == samplesProjectName) {
-      apply plugin: 'spring-boot'
+    dependencyManagement {
+      imports {
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:2.0.1.RELEASE'
+      }
+    }
+
+    if (it.parent.name == samplesContainerProjectName) {
+      // For sample projects
+      apply plugin: 'java'
 
     } else {
+      // for the library projects
       apply plugin: 'jacoco'
       apply plugin: 'maven'
       apply plugin: 'signing'
-      apply plugin: 'io.spring.dependency-management'
+      apply plugin: 'java-library'
+
+      repositories {
+        mavenLocal()
+      }
 
       afterEvaluate { Project project ->
-        jacoco {
-          toolVersion = "0.7.5.201505241946"
-        }
-
         signing {
           sign configurations.archives
         }
@@ -55,12 +61,6 @@ subprojects {
 
         artifacts {
           archives javadocJar, sourcesJar
-        }
-
-        dependencyManagement {
-          imports {
-            mavenBom 'io.spring.platform:platform-bom:2.0.1.RELEASE'
-          }
         }
 
         uploadArchives {

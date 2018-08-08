@@ -1,5 +1,5 @@
 dependencies {
-  compile project(':spring-security-token-filter-spring-boot-starter')
-  compile 'org.springframework.boot:spring-boot-starter-security'
-  compile 'org.springframework.boot:spring-boot-starter-web'
+  implementation project(':spring-security-token-filter-spring-boot-starter')
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
 }

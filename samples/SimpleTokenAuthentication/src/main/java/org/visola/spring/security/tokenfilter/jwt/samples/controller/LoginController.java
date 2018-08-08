@@ -28,7 +28,12 @@ public class LoginController {
   @RequestMapping(value="/api/v1/login", method=RequestMethod.POST)
   @ResponseBody
   public LoginResponse login(@RequestBody LoginRequest loginRequest) {
-    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+        loginRequest.getUsername(),
+        loginRequest.getPassword()
+    );
+
+    Authentication authentication = authenticationManager.authenticate(authenticationToken);
     String token = tokenService.generateToken(authentication);
     return new LoginResponse(token);
   }
